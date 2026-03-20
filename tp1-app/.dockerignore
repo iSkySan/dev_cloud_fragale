@@ -1,0 +1,17 @@
+# Exclure les fichiers inutiles pour réduire la taille de l'image
+__pycache__
+*.pyc
+*.pyo
+.env
+
+# Exclure les environnements virtuels Python
+.venv/
+venv/
+env/
+
+.git
+.gitignore
+.idea/
+.vscode/
+*.iml
+
