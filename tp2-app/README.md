@@ -520,33 +520,3 @@ Max instances: 3
 Memory: 512 Mi
 CPU: 1 vCPU
 ```
-
----
-
-## Compétences validées
-
-- Dockerfile multi-stage (optimisation taille)
-- Docker Compose (orchestration locale)
-- PostgreSQL avec Docker (persistance)
-- Redis (caching + TTL)
-- Google Artifact Registry (image registry GCP)
-- Cloud Run (serverless)
-- VPC + Firewall (networking GCP)
-- Traffic Splitting (canary deployments)
-- Troubleshooting et debugging
-
----
-
-## Ressources
-
-- Docker Compose Documentation : https://docs.docker.com/compose/
-- Cloud Run Documentation : https://cloud.google.com/run/docs
-- Google Artifact Registry : https://cloud.google.com/artifact-registry/docs
-- VPC Networking GCP : https://cloud.google.com/vpc/docs
-- Redis Documentation : https://redis.io/documentation
-
----
-
-Auteur : Théo Fragale - YNOV Campus Montpellier (Master 2 - Développer pour le Cloud)
-Date : 07/04/2026
-
