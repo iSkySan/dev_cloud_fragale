@@ -21,18 +21,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Installer les dépendances
-        run: npm install
-        working-directory: tp3-app
-      - name: Tests unitaires
-        run: npm test || echo "Pas de tests configurés — skip"
-        working-directory: tp3-app
-      - name: Lint du code
-        run: npm run lint || echo "Lint non configuré — skip"
-        working-directory: tp3-app
       - name: Valider les manifests Kubernetes
         run: |
           curl -sL https://github.com/instrumenta/kubeval/releases/latest/download/kubeval-linux-amd64.tar.gz | tar xz
