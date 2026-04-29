@@ -1,0 +1,63 @@
+# Topic 1 : Positions GPS des camions (flux principal)
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: truck-positions
+  namespace: logistream
+  labels:
+    strimzi.io/cluster: logistream-kafka   # Lie ce topic au cluster ci-dessus
+
+spec:
+  partitions: 6  # 6 partitions (zones géographiques)
+  replicas: 3
+
+  config:
+    # Rétention : 24h (temps réel uniquement)
+    retention.ms: "86400000"
+
+    # Suppression des anciens messages
+    cleanup.policy: "delete"
+
+
+---
+
+# Topic 2 : Alertes de livraison (retards, incidents)
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: delivery-alerts
+  namespace: logistream
+  labels:
+    strimzi.io/cluster: logistream-kafka
+
+spec:
+  partitions: 3
+  replicas: 3
+
+  config:
+    # Rétention : 7 jours
+    retention.ms: "604800000"
+
+    cleanup.policy: "delete"
+
+
+---
+
+# Topic 3 : Événements de livraison (tracking logistique)
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: delivery-events
+  namespace: logistream
+  labels:
+    strimzi.io/cluster: logistream-kafka
+
+spec:
+  partitions: 3
+  replicas: 3
+
+  config:
+    # Rétention : 30 jours
+    retention.ms: "2592000000"
+
+    cleanup.policy: "delete"
