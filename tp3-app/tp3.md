@@ -1072,7 +1072,7 @@ rm cicd-key.json # Supprimer immédiatement après copie
 Créez .github/workflows/logistream-deploy.yml :
 
 ```
-name: LogiStream — CI/CD Pipeline
+name: LogiStream — CI/CD Pipeline 
 ```
 ```
 on:
@@ -1159,7 +1159,7 @@ steps:
 - name: Build & Push Tracker Consumer
   run: |
   docker build -t ${{ steps.tags.outputs.consumer-tag }} ./consumer/
-  docker push _______ # ${{ steps.tags.outputs.consumer-tag }}
+  docker push ${{ steps.tags.outputs.consumer-tag }}# ${{ steps.tags.outputs.consumer-tag }}
 
 # ==========================================================
 # Job 3 : Deploy sur GKE
@@ -1167,7 +1167,7 @@ steps:
 deploy:
 name: Deploy sur GKE
 runs-on: ubuntu-latest
-needs: _______ # build-push
+needs: build-push # build-push
 
 steps:
 
