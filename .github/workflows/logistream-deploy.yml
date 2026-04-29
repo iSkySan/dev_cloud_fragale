@@ -100,9 +100,11 @@ jobs:
           kubectl apply -f tp3-app/k8s/hpa.yaml
       - name: Déployer GPS Producer et Tracker Consumer
         run: |
+          PRODUCER_TAG="${REGISTRY}/${PROJECT_ID}/tp2-registry/gps-producer:${{ github.sha }}"
+          CONSUMER_TAG="${REGISTRY}/${PROJECT_ID}/tp2-registry/tracker-consumer:${{ github.sha }}"
           sed \
-            -e "s|PRODUCER_IMAGE|${{ needs.build-push.outputs.producer-tag }}|g" \
-            -e "s|CONSUMER_IMAGE|${{ needs.build-push.outputs.consumer-tag }}|g" \
+            -e "s|PRODUCER_IMAGE|${PRODUCER_TAG}|g" \
+            -e "s|CONSUMER_IMAGE|${CONSUMER_TAG}|g" \
             tp3-app/k8s/kafka-apps.yaml | kubectl apply -f -
       - name: Attendre les déploiements
         run: |
