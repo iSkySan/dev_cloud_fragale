@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: gps-producer
-          image: europe-west9-docker.pkg.dev/ynov-cloud-theo/tp2-registry/gpsproducer:v1
+          image: PRODUCER_IMAGE
 
           envFrom:
             - configMapRef:
@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
         - name: tracker-consumer
-          image: europe-west9-docker.pkg.dev/ynov-cloud-theo/tp2-registry/trackerconsumer:v1
+          image: CONSUMER_IMAGE
 
           envFrom:
             - configMapRef:

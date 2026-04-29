@@ -95,21 +95,15 @@ jobs:
       - name: Déployer les manifests K8s
         run: |
           kubectl apply -f tp3-app/k8s/configmap.yaml
-          kubectl apply -f tp3-app/k8s/secret.yaml || true
           kubectl apply -f tp3-app/k8s/api-gateway.yaml
           kubectl apply -f tp3-app/k8s/tracker-service.yaml
           kubectl apply -f tp3-app/k8s/hpa.yaml
       - name: Déployer GPS Producer et Tracker Consumer
         run: |
-          sed -e "s|\[PROJECT_ID\]|${PROJECT_ID}|g" tp3-app/k8s/kafka-apps.yaml | kubectl apply -f -
-      - name: Mettre à jour les images avec le bon tag
-        run: |
-          kubectl set image deployment/gps-producer \
-            gps-producer=${{ needs.build-push.outputs.producer-tag }} \
-            -n logistream
-          kubectl set image deployment/tracker-consumer \
-            tracker-consumer=${{ needs.build-push.outputs.consumer-tag }} \
-            -n logistream
+          sed \
+            -e "s|PRODUCER_IMAGE|${{ needs.build-push.outputs.producer-tag }}|g" \
+            -e "s|CONSUMER_IMAGE|${{ needs.build-push.outputs.consumer-tag }}|g" \
+            tp3-app/k8s/kafka-apps.yaml | kubectl apply -f -
       - name: Attendre les déploiements
         run: |
           kubectl rollout status deployment/gps-producer -n logistream --timeout=5m
