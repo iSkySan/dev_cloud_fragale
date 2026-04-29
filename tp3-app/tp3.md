@@ -1259,10 +1259,8 @@ bin/kafka-topics.sh \
 ```
 sleep 15
 ```
-
 ```
-kubectl logs kafka-lag-check -n logistream
-kubectl delete pod kafka-lag-check -n logistream
+ensuikubectl delete pod kafka-lag-check -n logistream
 ```
 ### 4.2 — Logs structurés et requêtes Cloud Logging
 
@@ -1290,7 +1288,7 @@ gcloud logging read \
 'resource.type="k8s_container"
 AND resource.labels.namespace_name="logistream"
 AND resource.labels.container_name:"kafka"
-AND severity>=_______' \
+AND severity>=ERROR' \
 --limit=20
 # Niveau de sévérité : ERROR
 ```
@@ -1328,13 +1326,13 @@ Notez les métriques observées au repos :
 Métrique Valeur observée
 ```
 ```
-CPU moyen tracker-consumer _______ %
+CPU moyen tracker-consumer 0.2 %
 ```
 ```
-RAM moyenne tracker-consumer _______ Mi
+RAM moyenne tracker-consumer 0.2 Mi
 ```
 ```
-Pods HPA actifs au repos _______
+Pods HPA actifs au repos 2
 ```
 **Question :** Vous observez que le consumer lag sur truck-positions monte progressivement au cours du
 temps. Vous avez 3 instances du tracker-consumer (3 réplicas). Quelles sont les 3 actions à envisager dans
@@ -1342,6 +1340,9 @@ l'ordre pour résoudre ce problème?
 
 ```
 Réponse :
+Scaler les consumers — augmenter les réplicas du tracker-consumer de 3 à 6 pour couvrir les 6 partitions du topic.                                                          
+Optimiser le traitement — réduire le temps de traitement par message (batch, async).
+Augmenter les partitions — passer truck-positions à 12 partitions pour plus de parallélisme. 
 ```
 ## Nettoyage Final — IMPORTANT
 
