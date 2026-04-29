@@ -1,0 +1,12 @@
+# Clés et secrets GCP
+cicd-key.json
+*.key.json
+
+# Secrets Kubernetes (contiennent des credentials)
+k8s/secret.yaml
+
+# Node
+node_modules/
+package-lock.json
+consumer/package-lock.json
+producer/package-lock.json
