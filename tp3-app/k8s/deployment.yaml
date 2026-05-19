@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finsecure-app
+  namespace: logistream
+  labels:
+    app: finsecure-app
+    team: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: finsecure-app
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: finsecure-app
+    spec:
+      serviceAccountName: finsecure-app-ksa
+
+      initContainers:
+        - name: fetch-secrets
+          image: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+          command:
+            - /bin/sh
+            - -c
+            - |
+              gcloud secrets versions access latest \
+                --secret="finsecure-db-password" \
+                --project="${PROJECT_ID}" \
+                > /secrets/db-password
+          env:
+            - name: PROJECT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+          volumeMounts:
+            - name: secrets-vol
+              mountPath: /secrets
+
+      containers:
+        - name: finsecure-app
+          image: europe-west9-docker.pkg.dev/ynov-cloud-theo/tp2-registry/tp2-app:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: logistream-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tp3-app-secret
+                  key: DB_PASSWORD
+            - name: REDIS_HOST
+              value: "10.152.135.83"
+            - name: REDIS_PORT
+              value: "6379"
+          volumeMounts:
+            - name: secrets-vol
+              mountPath: /secrets
+              readOnly: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 20
+
+      volumes:
+        - name: secrets-vol
+          emptyDir:
+            medium: Memory
